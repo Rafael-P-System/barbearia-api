@@ -29,17 +29,16 @@ public class AgendamentoController {
     @PostMapping("/agendar")
     public ResponseEntity<?> agendar(@RequestBody Agendamento agendamento) {
 
-        // 🔥 VERIFICA MANUAL (SEM REPOSITORY CUSTOM)
-        boolean ocupado = agendamentoRepository.findAll().stream()
-                .anyMatch(a ->
-                        a.getBarbeiro().getId().equals(agendamento.getBarbeiro().getId()) &&
-                        a.getData().equals(agendamento.getData()) &&
-                        a.getHora().equals(agendamento.getHora())
-                );
+        // ✅ USANDO O MÉTODO DO REPOSITORY (Resolve o erro e ganha performance)
+        boolean ocupado = agendamentoRepository.existsByBarbeiroIdAndDataAndHoraAndStatus(
+                agendamento.getBarbeiro().getId(),
+                agendamento.getData(),
+                agendamento.getHora(),
+                "AGENDADO"
+        );
 
         // 🔴 SE OCUPADO → FILA
         if (ocupado) {
-
             FilaEspera fila = new FilaEspera();
             fila.setCliente(agendamento.getCliente());
             fila.setBarbeiro(agendamento.getBarbeiro());
@@ -59,7 +58,6 @@ public class AgendamentoController {
 
         // 🟢 AGENDAMENTO NORMAL
         agendamento.setStatus("AGENDADO");
-
         Agendamento salvo = agendamentoRepository.save(agendamento);
 
         return ResponseEntity.ok(
@@ -81,7 +79,7 @@ public class AgendamentoController {
             agendamento.setStatus("FINALIZADO");
             agendamentoRepository.save(agendamento);
 
-            // 🔥 PEGA O PRIMEIRO DA FILA
+            // 🔥 BUSCA O PRÓXIMO DA FILA (Usando filtro do banco)
             FilaEspera proximo = filaRepository.findAll().stream()
                     .filter(f ->
                             f.getBarbeiro().getId().equals(agendamento.getBarbeiro().getId()) &&
@@ -93,7 +91,6 @@ public class AgendamentoController {
                     .orElse(null);
 
             if (proximo != null) {
-
                 Agendamento novo = new Agendamento();
                 novo.setCliente(proximo.getCliente());
                 novo.setBarbeiro(proximo.getBarbeiro());
@@ -102,7 +99,6 @@ public class AgendamentoController {
                 novo.setStatus("AGENDADO");
 
                 agendamentoRepository.save(novo);
-
                 filaRepository.delete(proximo);
 
                 return ResponseEntity.ok(

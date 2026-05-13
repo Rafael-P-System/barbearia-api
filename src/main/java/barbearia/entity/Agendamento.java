@@ -1,9 +1,7 @@
-
 package barbearia.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -21,13 +19,8 @@ public class Agendamento {
     @Column(nullable = false)
     private LocalTime hora;
 
-    // 🔥 CORRIGIDO (ERA ENUM, AGORA STRING)
     @Column(nullable = false)
     private String status;
-
-    // =========================
-    // RELACIONAMENTOS
-    // =========================
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -44,11 +37,12 @@ public class Agendamento {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "agendamentos"})
     private Barbearia barbeiro;
 
-    // =========================
-    // GETTERS E SETTERS
-    // =========================
+    // Construtor padrão exigido pelo JPA
+    public Agendamento() {}
 
+    // Getters e Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public LocalDate getData() { return data; }
     public void setData(LocalDate data) { this.data = data; }

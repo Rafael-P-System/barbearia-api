@@ -9,19 +9,22 @@ server:
 # =========================
 spring:
   datasource:
-    # URL corrigida para o driver do PostgreSQL
+    # URL para o banco de dados local 'barbearia'
     url: jdbc:postgresql://localhost:5432/barbearia
+    # Usa a variável de ambiente DB_USER ou 'postgres' como padrão
     username: ${DB_USER:postgres}
+    # Obriga o uso da variável de ambiente DB_PASSWORD para segurança
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    # 'update' cria as tabelas automaticamente se elas não existirem
+    # 'update' sincroniza o banco com suas classes Java
     hibernate:
       ddl-auto: update
-    show-sql: true # Ative para ver os comandos no terminal durante o desenvolvimento
+    show-sql: true 
     properties:
       hibernate:
+        # O dialeto é detectado automaticamente, mas deixamos configurado para o Postgres
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
@@ -29,9 +32,9 @@ spring:
 # SECURITY (JWT)
 # =========================
 jwt:
-  # Chave secreta usada para assinar os tokensm
+  # Chave secreta protegida por variável de ambiente
   secret: ${JWT_SECRET}
-  # Tempo de expiração (24 horas em milissegundos)
+  # Expiração de 24 horas (em milissegundos)
   expiration: 86400000
 
 # =========================
