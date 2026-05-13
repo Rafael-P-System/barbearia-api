@@ -1,0 +1,42 @@
+# =========================
+# SERVER CONFIGURATION
+# =========================
+server:
+  port: ${PORT:8080}
+
+# =========================
+# DATABASE CONFIGURATION (POSTGRESQL)
+# =========================
+spring:
+  datasource:
+    # URL corrigida para o driver do PostgreSQL
+    url: jdbc:postgresql://localhost:5432/barbearia
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    # 'update' cria as tabelas automaticamente se elas não existirem
+    hibernate:
+      ddl-auto: update
+    show-sql: true # Ative para ver os comandos no terminal durante o desenvolvimento
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+# =========================
+# SECURITY (JWT)
+# =========================
+jwt:
+  # Chave secreta usada para assinar os tokensm
+  secret: ${JWT_SECRET}
+  # Tempo de expiração (24 horas em milissegundos)
+  expiration: 86400000
+
+# =========================
+# DEVELOPMENT CONTROL
+# =========================
+dev:
+  owner:
+    key: ${DEV_OWNER_KEY}
