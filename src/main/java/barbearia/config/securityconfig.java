@@ -34,7 +34,7 @@ public class securityconfig {
             // 🔒 desativa csrf (API stateless)
             .csrf(csrf -> csrf.disable())
 
-            // 🌐 ativa CORS com config abaixo
+            // 🌐 ativa CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
             // 🔐 sem sessão (JWT)
@@ -42,11 +42,14 @@ public class securityconfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // 🔓 rotas públicas
+            // 🔓 rotas públicas (Corrigido o padrão do Spring Boot 3)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/api/**/login",
-                    "/api/**/cadastro"
+                    "/api/login",
+                    "/api/cadastro",
+                    "/api/auth/**",      // Permite tudo que comece com /api/auth/
+                    "/v3/api-docs/**",   // Documentação Swagger (caso use)
+                    "/swagger-ui/**"     // Interface Swagger (caso use)
                 ).permitAll()
                 .anyRequest().authenticated()
             )
@@ -61,30 +64,23 @@ public class securityconfig {
         return http.build();
     }
 
-    // 🔐 criptografia de senha
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 🌐 CORS (ajuste para produção depois)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // ⚠️ EM PRODUÇÃO: troque por seu domínio
+        // Adicionei "*" apenas para teste, depois você volta para seus IPs específicos
         configuration.setAllowedOrigins(List.of(
             "http://localhost:8081",
             "http://192.168.10.11:8081"
         ));
 
-        configuration.setAllowedMethods(List.of(
-            "GET", "POST", "PUT", "DELETE", "OPTIONS"
-        ));
-
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
