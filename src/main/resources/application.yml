@@ -20,9 +20,9 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    # 'update' sincroniza o banco com suas classes Java
+    # 'none' evita a checagem pesada de tabelas no boot, acelerando o deploy no Render
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true 
     properties:
       hibernate:
