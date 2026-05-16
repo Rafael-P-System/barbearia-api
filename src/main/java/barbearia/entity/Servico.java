@@ -1,52 +1,51 @@
 package barbearia.entity;
 
+import java.math.BigDecimal;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "servicos")
+@Table(name = "servico") // Garante o nome exato da tabela no MySQL
 public class Servico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
     private String nome;
-    private Double preco;
+    
+    @Column(precision = 10, scale = 2, nullable = false)
+    private BigDecimal preco;
 
-    // Construtor padrão (obrigatório para o JPA/Hibernate)
-    public Servico() {
-    }
+    // Adicionando o campo que está no seu SQL para não dar erro de mapeamento
+    @Column(name = "tempo_estimado")
+    private Integer tempoEstimado;
 
-    // Construtor opcional para facilitar a criação
-    public Servico(Long id, String nome, Double preco) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-    }
+    private String descricao;
 
-    // --- GETTERS E SETTERS MANUAIS (Substituindo o Lombok) ---
+    @OneToMany(mappedBy = "servico")
+    @JsonIgnoreProperties("servico")
+    private List<Agendamento> agendamentos;
 
-    public Long getId() {
-        return id;
-    }
+    // --- Getters e Setters ---
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public BigDecimal getPreco() { return preco; }
+    public void setPreco(BigDecimal preco) { this.preco = preco; }
 
-    public Double getPreco() {
-        return preco;
-    }
+    public Integer getTempoEstimado() { return tempoEstimado; }
+    public void setTempoEstimado(Integer tempoEstimado) { this.tempoEstimado = tempoEstimado; }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public List<Agendamento> getAgendamentos() { return agendamentos; }
+    public void setAgendamentos(List<Agendamento> agendamentos) { this.agendamentos = agendamentos; }
 }

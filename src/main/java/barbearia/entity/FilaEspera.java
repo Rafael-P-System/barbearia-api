@@ -12,79 +12,40 @@ public class FilaEspera {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nomeCliente;
+
     private LocalDate data;
+
+    private Long barbeiroId;
 
     private LocalDateTime criadoEm;
 
-    @Column(nullable = false)
-    private String status;
+    private String status; // ESPERANDO, CHAMADO, CANCELADO
 
-    // 🔥 posição na fila
-    @Column(nullable = false)
-    private Integer posicao;
+    // 🔥 CORREÇÃO: Adicionado o campo posição para alinhar com o Controller
+    private int posicao; 
 
-    // RELACIONAMENTOS
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    // ==========================================
+    // GETTERS E SETTERS (Manuais e seguros)
+    // ==========================================
+    public Long getId() { return id; }
 
-    @ManyToOne
-    @JoinColumn(name = "barbeiro_id")
-    private Barbearia barbeiro;
+    public String getNomeCliente() { return nomeCliente; }
+    public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
 
-    // =========================
-    // GETTERS E SETTERS
-    // =========================
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getBarbeiroId() { return barbeiroId; }
+    public void setBarbeiroId(Long barbeiroId) { this.barbeiroId = barbeiroId; }
 
-    public LocalDate getData() {
-        return data;
-    }
+    public LocalDateTime getCriadoEm() { return criadoEm; }
+    public void setCriadoEm(LocalDateTime criadoEm) { this.criadoEm = criadoEm; }
 
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public LocalDateTime getCriadoEm() {
-        return criadoEm;
-    }
-
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Integer getPosicao() {
-        return posicao;
-    }
-
-    public void setPosicao(Integer posicao) {
-        this.posicao = posicao;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Barbearia getBarbeiro() {
-        return barbeiro;
-    }
-
-    public void setBarbeiro(Barbearia barbeiro) {
-        this.barbeiro = barbeiro;
-    }
+    // 🔥 CORREÇÃO: Adicionados os métodos que o Controller estava procurando
+    public int getPosicao() { return posicao; }
+    public void setPosicao(int posicao) { this.posicao = posicao; }
 }

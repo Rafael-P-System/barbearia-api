@@ -55,7 +55,10 @@ public class DevController {
 
         // 👑 define ADMIN
         admin.setNivel("ADMIN");
-        admin.setAtivo(true);
+        
+        // 🔥 CORREÇÃO AQUI: Mudado de setAtivo(true) para setStatus("ATIVO")
+        // para alinhar com a String do banco de dados e com o Front-End SaaS.
+        admin.setStatus("ATIVO");
 
         // 🔒 senha segura
         admin.setSenha(passwordEncoder.encode(admin.getSenha()));

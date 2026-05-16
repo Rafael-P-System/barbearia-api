@@ -41,28 +41,25 @@ public class FilaEsperaController {
         fila.setCriadoEm(LocalDateTime.now());
         fila.setStatus("ESPERANDO");
 
-        // 🔥 CORREÇÃO IMPORTANTE: filtrar por data e status
         List<FilaEspera> lista = repository.findAll();
-
-        int posicao = 1;
+        int posicaoAtual = 1;
 
         for (FilaEspera f : lista) {
-
             if (f.getData() != null
                     && f.getData().equals(fila.getData())
                     && "ESPERANDO".equalsIgnoreCase(f.getStatus())) {
-
-                posicao++;
+                posicaoAtual++;
             }
         }
 
-        fila.setPosicao(posicao);
+        // Linha 56 corrigida: Usa o método manual setPosicao da sua Entidade
+        fila.setPosicao(posicaoAtual);
 
         FilaEspera salvo = repository.save(fila);
 
         return ResponseEntity.ok(Map.of(
                 "mensagem", "Entrou na fila",
-                "posicao", posicao,
+                "posicao", posicaoAtual,
                 "dados", salvo
         ));
     }
@@ -104,9 +101,7 @@ public class FilaEsperaController {
         }
 
         LocalDate data = fila.getData();
-
         repository.delete(fila);
-
         atualizarFila(data);
 
         return ResponseEntity.ok(Map.of(
@@ -118,18 +113,17 @@ public class FilaEsperaController {
     // REORGANIZAR FILA
     // =========================
     private void atualizarFila(LocalDate data) {
-
         List<FilaEspera> lista = repository.findAll();
-
-        int posicao = 1;
+        int contadorPosicao = 1;
 
         for (FilaEspera f : lista) {
-
             if (f.getData() != null
                     && f.getData().equals(data)
                     && "ESPERANDO".equalsIgnoreCase(f.getStatus())) {
-
-                f.setPosicao(posicao++);
+                
+                // Linha 125 corrigida: Atualiza usando o método manual sem depender do Lombok
+                f.setPosicao(contadorPosicao);
+                contadorPosicao++;
             }
         }
 

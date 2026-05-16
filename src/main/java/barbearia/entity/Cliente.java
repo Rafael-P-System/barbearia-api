@@ -3,8 +3,12 @@ package barbearia.entity;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "clientes")
 public class Cliente {
 
@@ -12,39 +16,19 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String nome;
-
-    @Column(nullable = true)
     private String telefone;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    @JsonIgnore // 🔐 NUNCA retorna senha no JSON
-    @Column(nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Agendamento> agendamentos;
 
-    // =========================
-    // CONSTRUTORES
-    // =========================
-    public Cliente() {}
-
-    public Cliente(Long id, String nome, String telefone, String email, String senha) {
-        this.id = id;
-        this.nome = nome;
-        this.telefone = telefone;
-        this.email = email;
-        this.senha = senha;
-    }
-
-    // =========================
-    // GETTERS E SETTERS (Manuais para evitar erros de IDE)
-    // =========================
+    // --- MÉTODOS MANUAIS (Para ignorar erro do Lombok) ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -59,7 +43,4 @@ public class Cliente {
 
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
-
-    public List<Agendamento> getAgendamentos() { return agendamentos; }
-    public void setAgendamentos(List<Agendamento> agendamentos) { this.agendamentos = agendamentos; }
 }
