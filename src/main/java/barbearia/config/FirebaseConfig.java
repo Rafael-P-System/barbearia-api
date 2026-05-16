@@ -30,17 +30,17 @@ public class FirebaseConfig {
                         .build();
                     System.out.println("✅ Firebase conectado com sucesso usando variável de ambiente (Render)!");
                 } else {
-                    // Tenta ler o arquivo na raiz (Render Secret File ou Local Root)
-                    FileSystemResource fileResource = new FileSystemResource("firebase-config.json");
+                    // 1. Primeiro tenta buscar na raiz do servidor (Onde o Secret File do Render fica de verdade)
+                    FileSystemResource externalFile = new FileSystemResource("firebase-config.json");
                     InputStream stream;
 
-                    if (fileResource.exists()) {
-                        stream = fileResource.getInputStream();
+                    if (externalFile.exists()) {
+                        stream = externalFile.getInputStream();
                         System.out.println("✅ Firebase conectado com sucesso usando arquivo externo na raiz!");
                     } else {
-                        // Backup caso esteja rodando local na estrutura antiga
+                        // 2. Fallback: Se não achar fora, tenta ler de dentro do resources (Útil para o seu PC local)
                         stream = new ClassPathResource("firebase-config.json").getInputStream();
-                        System.out.println("✅ Firebase conectado com sucesso usando arquivo do classpath local!");
+                        System.out.println("✅ Firebase conectado com sucesso usando arquivo local do classpath!");
                     }
 
                     options = FirebaseOptions.builder()
