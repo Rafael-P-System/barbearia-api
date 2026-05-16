@@ -19,33 +19,35 @@ public class FirebaseConfig {
     public void initialize() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
-                // 1. Tenta ler a String bruta direto da variável de ambiente (Para o Render)
                 String firebaseJson = System.getenv("FIREBASE_CONFIG_JSON");
                 FirebaseOptions options;
 
+                // .trim() aprimorado para remover possíveis aspas ou espaços que o Render injeta
                 if (firebaseJson != null && !firebaseJson.trim().isEmpty()) {
+                    String cleanJson = firebaseJson.trim();
                     options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.fromStream(
-                            new ByteArrayInputStream(firebaseJson.getBytes(StandardCharsets.UTF_8))))
+                            new ByteArrayInputStream(cleanJson.getBytes(StandardCharsets.UTF_8))))
                         .build();
-                    System.out.println("✅ Firebase conectado com sucesso usando variável de ambiente (Render)!");
+                    System.out.println("✅ [DEBUG] Variável FIREBASE_CONFIG_JSON detectada. Tentando inicializar...");
                 } else {
-                    // 2. Se a variável estiver vazia, lê o arquivo físico do classpath (Para o seu PC local)
+                    System.out.println("⚠️ [DEBUG] Variável de ambiente não encontrada. Mudando para o modo local...");
                     ClassPathResource resource = new ClassPathResource("firebase-config.json");
                     if (!resource.exists()) {
-                        throw new IOException("Arquivo firebase-config.json não foi encontrado no classpath local.");
+                        throw new IOException("Arquivo firebase-config.json não existe no classpath e a env local está vazia.");
                     }
                     InputStream stream = resource.getInputStream();
                     options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.fromStream(stream))
                         .build();
-                    System.out.println("✅ Firebase conectado com sucesso usando arquivo local!");
                 }
 
                 FirebaseApp.initializeApp(options);
+                System.out.println("🚀 [SUCESSO] FirebaseApp inicializado com êxito!");
             }
-        } catch (IOException e) {
-            System.err.println("❌ Erro crítico ao inicializar o Firebase: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("❌ [ERRO COMPLETO] Falha na inicialização do Firebase: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
