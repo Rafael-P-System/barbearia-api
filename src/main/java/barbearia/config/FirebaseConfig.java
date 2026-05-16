@@ -9,10 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
-@Configuration
+// COMENTADO TEMPORARIAMENTE PARA TESTE DE BOOT NO RENDER
+// @Configuration
 public class FirebaseConfig {
 
-    @PostConstruct
+    // Comentado o @PostConstruct para o Spring não executar no início
+    // @PostConstruct
     public void initialize() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
