@@ -3,6 +3,8 @@
 # =========================
 server:
   port: ${PORT:8080}
+  tomcat:
+    tld-scan-and-meta-inf-annotations: false
 
 # =========================
 # DATABASE CONFIGURATION (POSTGRESQL)
