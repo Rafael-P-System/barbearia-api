@@ -36,3 +36,5 @@ build/
 src/main/resources/firebase-config.json
 ### Perfil de Desenvolvimento Local ###
 src/main/resources/application-dev.yml
+# Arquivos de ambiente locais
+.env
