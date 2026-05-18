@@ -13,8 +13,9 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:8081")
+                registry.addMapping("/**")
+                        // 🔥 Trocamos o "*" pelas origens explícitas do seu Expo
+                        .allowedOrigins("http://localhost:8081", "http://127.0.0.1:8081") 
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

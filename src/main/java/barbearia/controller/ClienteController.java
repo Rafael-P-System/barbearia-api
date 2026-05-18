@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")
-@CrossOrigin(origins = "*")
+// 🔥 REMOVIDO: O @CrossOrigin(origins = "*") saiu daqui para não quebrar com o allowCredentials(true) do CorsConfig
 public class ClienteController {
 
     @Autowired
