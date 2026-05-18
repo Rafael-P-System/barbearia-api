@@ -94,8 +94,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
+            <groupId>io.jsonwebtoken</groupId>
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
@@ -125,12 +125,8 @@
                     <release>21</release>
                     <annotationProcessorPaths>
                         <path>
-                            <dependency>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>1.18.32</version>
-                                <scope>provided</scope>
-                            </dependency>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
