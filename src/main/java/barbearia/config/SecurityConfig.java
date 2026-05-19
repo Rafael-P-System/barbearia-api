@@ -9,6 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.Arrays;
 
 @Configuration
@@ -17,40 +18,49 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-            // 1. Ativa a configuração de CORS que criamos logo abaixo
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            // 2. Mantém o CSRF desativado para os testes
-            .csrf(csrf -> csrf.disable()) 
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // 🔓 Mantém tudo liberado temporariamente
+                .anyRequest().permitAll()
             );
-        
+
         return http.build();
     }
 
-    // 🌐 Método que dá permissão para o seu Front-end conversar com a API do Render
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration configuration = new CorsConfiguration();
-        
-        // Libera o acesso para o seu PWA local rodando no navegador
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:8081", 
-            "http://127.0.0.1:8081"
-        )); 
-        
-        // Libera os métodos HTTP que o seu app vai usar
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        
-        // Libera os cabeçalhos das requisições (importante para quando usarmos JWT)
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
-        
-        // Permite envio de cookies/autenticação se necessário
+
+        // Libera localhost e qualquer deploy da Vercel
+        configuration.setAllowedOriginPatterns(Arrays.asList(
+            "http://localhost:*",
+            "http://127.0.0.1:*",
+            "https://*.vercel.app"
+        ));
+
+        // Métodos HTTP permitidos
+        configuration.setAllowedMethods(Arrays.asList(
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "OPTIONS"
+        ));
+
+        // Todos os headers liberados
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        // Permite envio de credenciais/token/cookies
         configuration.setAllowCredentials(true);
-        
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Aplica para todas as rotas da API
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 
