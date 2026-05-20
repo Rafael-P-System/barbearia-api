@@ -1,6 +1,5 @@
 package barbearia.controller;
 
-import barbearia.entity.Barbearia;
 import barbearia.repository.BarbeariaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
